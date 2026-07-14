@@ -18,19 +18,20 @@
 
     /* ===== Custom Properties (Design Tokens) ===== */
     :root {
+      --gold-400: #fbbf24;
+      --gold-500: #f59e0b;
+      --gold-600: #d97706;
+
       --blue-400: #38bdf8;
       --blue-500: #0ea5e9;
-      --blue-600: #0284c7;
 
       --green-400: #34d399;
       --green-500: #10b981;
-      --green-600: #059669;
 
-      --surface: #0b0f19;
-      --surface-card: #121824;
-      --surface-card-hover: #171f30;
-      --surface-input: #1a2333;
-      --border: #222e45;
+      --surface: #07090e;
+      --surface-card: #0d121f;
+      --surface-input: #0a0d16;
+      --border: #1e293b;
       --border-focus: #38bdf8;
 
       --text-primary: #f8fafc;
@@ -38,11 +39,10 @@
       --text-muted: #475569;
 
       --danger: #ef4444;
-      --danger-hover: #dc2626;
 
       --radius-sm: 6px;
       --radius-md: 10px;
-      --radius-lg: 14px;
+      --radius-lg: 16px;
 
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
       --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
@@ -121,7 +121,6 @@
 
     .team-card:hover {
       border-color: #334155;
-      transform: translateY(-1px);
     }
 
     .team-label {
@@ -194,11 +193,11 @@
       border-color: var(--green-500);
     }
 
-    /* ===== Buttons ===== */
+    /* ===== Tactile Buttons (Online Casino Style) ===== */
     .btn-group {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 14px;
       flex-wrap: wrap;
       margin-bottom: 40px;
     }
@@ -206,58 +205,59 @@
     .btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      padding: 12px 24px;
+      padding: 14px 28px;
       border: none;
       border-radius: var(--radius-md);
       font-family: var(--font-main);
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: var(--transition);
       outline: none;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
     }
 
     .btn:active {
-      transform: scale(0.98);
+      transform: translateY(4px);
+      box-shadow: none !important;
     }
 
     .btn-primary {
-      background: var(--blue-500);
-      color: #fff;
+      background: var(--gold-400);
+      color: #000;
+      box-shadow: 0 4px 0 var(--gold-600);
     }
 
     .btn-primary:hover {
-      background: var(--blue-600);
+      background: var(--gold-500);
     }
 
     .btn-secondary {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
+      background: #1e293b;
+      color: #f8fafc;
+      box-shadow: 0 4px 0 #0f172a;
     }
 
     .btn-secondary:hover {
-      background: var(--surface-card);
-      color: var(--text-primary);
-      border-color: #334155;
+      background: #334155;
     }
 
     .btn-danger {
-      background: transparent;
-      color: var(--danger);
-      border: 1px solid rgba(239, 68, 68, 0.2);
+      background: #7f1d1d;
+      color: #fecaca;
+      box-shadow: 0 4px 0 #450a0a;
     }
 
     .btn-danger:hover {
-      background: rgba(239, 68, 68, 0.05);
-      border-color: var(--danger);
+      background: #991b1b;
     }
 
     .btn:disabled {
-      opacity: 0.4;
+      opacity: 0.35;
       cursor: not-allowed;
       transform: none !important;
+      box-shadow: none !important;
     }
 
     /* ===== Error Alert ===== */
@@ -283,76 +283,117 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== Roulette Animation Area ===== */
-    .roulette-area {
+    /* ===== Casino Slot Machine Cabinet ===== */
+    .slot-machine {
       display: none;
-      margin-bottom: 40px;
+      background: #0f131c;
+      border: 3px solid var(--gold-400);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      box-shadow: 0 0 30px rgba(251, 191, 36, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.8);
+      position: relative;
     }
 
-    .roulette-area.active {
+    .slot-machine.active {
       display: block;
     }
 
-    .roulette-title {
-      text-align: center;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
+    .slot-machine::before {
+      content: '⚡ PARTNER SLOTS ⚡';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold-400);
+      color: #07090e;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 4px;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(251, 191, 36, 0.4);
     }
 
-    .roulette-pairs {
+    .slot-machine-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .slot-reel {
+      height: 60px;
+      overflow: hidden;
+      position: relative;
+      background: #06090e;
+      border: 2px solid #1e293b;
+      border-radius: var(--radius-md);
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.9);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .slot-reel.stopped {
+      border-color: var(--green-500);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.25), inset 0 0 12px rgba(0,0,0,0.9);
+    }
+
+    /* Red pointer arrows on the sides of the active cell view */
+    .slot-reel::before, .slot-reel::after {
+      content: '▶';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold-400);
+      font-size: 0.8rem;
+      z-index: 10;
+      animation: pointerGlow 1s infinite alternate;
+    }
+    .slot-reel::before { left: 8px; }
+    .slot-reel::after { right: 8px; transform: translateY(-50%) rotate(180deg); }
+
+    @keyframes pointerGlow {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
+    }
+
+    .slot-strip {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      max-width: 480px;
-      margin: 0 auto;
+      transform: translateY(0);
     }
 
-    .roulette-pair {
+    .slot-cell {
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      background: var(--surface-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      font-size: 0.95rem;
-      font-weight: 500;
+      gap: 8px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      user-select: none;
     }
 
-    .roulette-pair .player-a {
-      color: var(--blue-400);
-      min-width: 100px;
-      text-align: right;
+    .slot-cell .name-b {
+      color: var(--green-400);
     }
-
-    .roulette-pair .separator {
+    .slot-cell .dash {
       color: var(--text-muted);
     }
-
-    .roulette-pair .player-b {
-      color: var(--green-400);
-      min-width: 100px;
-      text-align: left;
+    .slot-cell .name-a {
+      color: var(--blue-400);
     }
 
-    /* ===== Progress Bar ===== */
-    .progress-bar-container {
-      max-width: 480px;
-      margin: 16px auto 0;
-      background: var(--surface-input);
-      border-radius: 10px;
-      height: 4px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: var(--blue-500);
-      transition: width 0.1s linear;
+    .slot-machine-title {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
     }
 
     /* ===== Results ===== */
@@ -377,6 +418,18 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+    }
+
+    .group-section-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--gold-400);
+      margin: 24px auto 14px;
+      max-width: 680px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-left: 3px solid var(--gold-400);
+      padding-left: 10px;
     }
 
     .results-grid {
@@ -527,13 +580,10 @@
       </button>
     </div>
 
-    <!-- ===== Area Animasi Roulette ===== -->
-    <div class="roulette-area" id="roulette-area">
-      <div class="roulette-title" id="roulette-title">🎰 Mengacak partner...</div>
-      <div class="roulette-pairs" id="roulette-pairs"></div>
-      <div class="progress-bar-container">
-        <div class="progress-bar" id="progress-bar"></div>
-      </div>
+    <!-- ===== Area Animasi Roulette (Slot Machine) ===== -->
+    <div class="slot-machine" id="roulette-area">
+      <div class="slot-machine-title" id="roulette-title">🎰 Mengacak partner...</div>
+      <div class="slot-machine-grid" id="roulette-pairs"></div>
     </div>
 
     <!-- ===== Area Hasil ===== -->
@@ -571,7 +621,6 @@
     const rouletteArea = document.getElementById('roulette-area');
     const roulettePairs= document.getElementById('roulette-pairs');
     const rouletteTitle= document.getElementById('roulette-title');
-    const progressBar  = document.getElementById('progress-bar');
     const resultsArea  = document.getElementById('results-area');
     const resultsGrid  = document.getElementById('results-grid');
     const confettiCanvas = document.getElementById('confetti-canvas');
@@ -605,19 +654,57 @@
         .filter(n => n.length > 0);
     }
 
+    // Map alias/panggilan ke nama utama untuk pencocokan logika (case-insensitive)
+    const aliasGroups = {
+      // Group 1: Tyar
+      'tyar': 'tyar', 'tiar': 'tyar', 'gymans': 'tyar', 'gymnastiar': 'tyar',
+      // Group 2: Uyun
+      'uyy': 'uyun', 'uyun': 'uyun', 'uyyun': 'uyun', 'uy': 'uyun',
+      // Group 3: Ryo
+      'ryo': 'ryo', 'rio': 'ryo', 'ryoo': 'ryo',
+      // Group 4: Putra
+      'putra': 'putra', 'elga': 'putra', 'put': 'putra',
+      // Group 5: Dimas
+      'dimas': 'dimas', 'dims': 'dimas', 'dim': 'dimas', 'proneshoot': 'dimas', 'surya 12': 'dimas',
+      // Group 6: Anang
+      'boboca': 'anang', 'anang': 'anang',
+      // Group 7: Syahrir
+      'syahrir': 'syahrir', 'syahrier': 'syahrir',
+      // Group 8: Rafi
+      'rafi': 'rafi', 'wege': 'rafi', 'wg': 'rafi', 'rafi wege': 'rafi', 'rafi wg': 'rafi',
+      // Group 9: Dzaki
+      'dzaki': 'dzaki', 'jek': 'dzaki', 'dzak': 'dzaki', 'jack': 'dzaki', 'badi': 'dzaki', 'zaki': 'dzaki', 'jaki': 'dzaki',
+      // Group 10: Fani
+      'fani': 'fani', 'fany': 'fani', 'penot': 'fani', 'mr penot': 'fani',
+      // Group 11: Deni
+      'deni': 'deni', 'denny': 'deni', 'noox': 'deni', 'deny': 'deni',
+      // Group 12: Ahunk
+      'ahunk': 'ahunk', 'andra': 'ahunk', 'hunk': 'ahunk', 'ahung': 'ahunk', 'ahonk': 'ahunk', 'ahong': 'ahunk'
+    };
+
     /**
-     * Mendeteksi duplikat nama (case-insensitive) di dalam satu tim.
-     * Mengembalikan array nama duplikat yang ditemukan.
+     * Mengembalikan ID nama utama dari input (case-insensitive, spasi ganda dihapus).
+     * Jika tidak ada dalam daftar alias, mengembalikan nama lowercase asli.
+     */
+    function getCanonical(name) {
+      const clean = name.trim().toLowerCase().replace(/\s+/g, ' ');
+      return aliasGroups[clean] || clean;
+    }
+
+    /**
+     * Mendeteksi duplikat nama di dalam satu tim.
+     * Menggunakan getCanonical sehingga nama alias/panggilan yang mengacu
+     * ke orang yang sama dianggap duplikat.
      */
     function findDuplicates(names) {
       const seen = new Set();
       const dupes = [];
       for (const name of names) {
-        const key = name.toLowerCase();
-        if (seen.has(key)) {
+        const canonical = getCanonical(name);
+        if (seen.has(canonical)) {
           dupes.push(name);
         }
-        seen.add(key);
+        seen.add(canonical);
       }
       return dupes;
     }
@@ -679,11 +766,114 @@
     }
 
     // ============================================================
+    //  AUDIO SYNTHESIS (built-in, no external assets needed)
+    // ============================================================
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    // Play a mechanical clicking sound
+    function playTickSound() {
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.04);
+        
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.04);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.04);
+      } catch (e) {}
+    }
+
+    // Play a low-pitch heavy heartbeat thump sound
+    function playThumpSound() {
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(20, audioCtx.currentTime + 0.12);
+        
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.12);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } catch (e) {}
+    }
+
+    // Play a metallic deep clack sound when a reel stops
+    function playClackSound() {
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.12);
+        
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.12);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } catch (e) {}
+    }
+
+    // Play a winning jackpot sound
+    function playWinSound() {
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const now = audioCtx.currentTime;
+        const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99]; // C E G C E G
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          
+          gain.gain.setValueAtTime(0.03, now + idx * 0.08);
+          gain.gain.linearRampToValueAtTime(0, now + idx * 0.08 + 0.22);
+          
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.22);
+        });
+      } catch (e) {}
+    }
+
+    // ============================================================
     //  TOMBOL: ACAK PARTNER
     // ============================================================
     function handleShuffle() {
       if (isAnimating) return;
       hideError();
+      initAudio();
 
       const result = validate(teamAInput.value, teamBInput.value);
       if (!result.valid) {
@@ -705,6 +895,7 @@
       if (isAnimating) return;
       if (lastTeamA.length === 0) return;
       hideError();
+      initAudio();
       startRoulette(lastTeamA, lastTeamB);
     }
 
@@ -732,7 +923,7 @@
     }
 
     // ============================================================
-    //  ANIMASI ROULETTE
+    //  ANIMASI SLOT MACHINE ROULETTE (5 DETIK SEQUENTIAL EDITION)
     // ============================================================
     function startRoulette(teamA, teamB) {
       isAnimating = true;
@@ -745,56 +936,138 @@
       // Tampilkan area roulette
       rouletteArea.classList.add('active');
       rouletteTitle.textContent = '🎰 Mengacak partner...';
-      progressBar.style.width = '0%';
 
-      // Bangun slot roulette (Tim B di kiri, Tim A di kanan)
-      roulettePairs.innerHTML = '';
-      for (let i = 0; i < teamB.length; i++) {
-        const div = document.createElement('div');
-        div.className = 'roulette-pair';
-        div.innerHTML = `
-          <span class="player-b" data-idx="${i}">${teamB[i]}</span>
-          <span class="separator">-</span>
-          <span class="player-a" data-idx="${i}">${teamA[i]}</span>
-        `;
-        roulettePairs.appendChild(div);
-      }
+      // Hitung pasangan akhir sesungguhnya
+      let finalPairs = getPairs(teamA, teamB);
 
-      const DURATION = 5000;   // Total durasi animasi (ms)
-      const startTime = Date.now();
-      let intervalId;
-
-      // Kecepatan berubah: cepat di awal, melambat di akhir
-      function tick() {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / DURATION, 1);
-
-        // Update progress bar
-        progressBar.style.width = (progress * 100) + '%';
-
-        // Acak tampilan di setiap slot (kedua sisi berubah selama animasi)
-        const shuffledA = fisherYatesShuffle(teamA);
-        const shuffledB = fisherYatesShuffle(teamB);
-        const playerAElements = roulettePairs.querySelectorAll('.player-a');
-        const playerBElements = roulettePairs.querySelectorAll('.player-b');
-        playerBElements.forEach((el, idx) => {
-          el.textContent = shuffledB[idx] || '';
-        });
-        playerAElements.forEach((el, idx) => {
-          el.textContent = shuffledA[idx] || '';
-        });
-
-        // Interval makin lambat seiring waktu (easing)
-        if (progress < 1) {
-          const delay = 50 + Math.floor(progress * progress * 400); // 50ms → ~450ms
-          intervalId = setTimeout(tick, delay);
+      // Urutkan pasangan agar Grup A di atas, Grup B di bawah (sehingga reel slot match dengan hasil kartu)
+      const groupAMembers = new Set(['dimas', 'fani', 'syahrir', 'uyun', 'putra', 'rafi']);
+      const groupAPairs = [];
+      const groupBPairs = [];
+      finalPairs.forEach(pair => {
+        const canonB = getCanonical(pair.nameB);
+        if (groupAMembers.has(canonB)) {
+          groupAPairs.push(pair);
         } else {
-          finishRoulette(teamA, teamB);
+          groupBPairs.push(pair);
+        }
+      });
+      finalPairs = [...groupAPairs, ...groupBPairs];
+
+      const cellHeight = 60; // Tinggi satu sel slot (sesuai CSS)
+      const cellCount = 90;  // Ditingkatkan agar putaran tetap kencang dan mulus untuk durasi panjang (10-15 detik)
+
+      // Bangun durasi yang berhenti satu per satu, dengan batas waktu 10 hingga 15 detik (10000ms - 15000ms)
+      let durations = [];
+      const numReels = finalPairs.length;
+      for (let i = 0; i < numReels; i++) {
+        // Rentang waktu stop dari 10000ms (10 detik) hingga 15000ms (15 detik) secara merata
+        durations.push(10000 + Math.floor((i / (numReels - 1)) * 5000));
+      }
+      // Acak durasi pemberhentian agar urutan reel yang berhenti benar-benar random/acak tiap putaran
+      durations = fisherYatesShuffle(durations);
+
+      // Bangun reel slot untuk setiap pasangan
+      roulettePairs.innerHTML = '';
+      const reelsData = [];
+
+      finalPairs.forEach((pair, reelIdx) => {
+        // Buat element reel
+        const reelDiv = document.createElement('div');
+        reelDiv.className = 'slot-reel';
+        
+        const stripDiv = document.createElement('div');
+        stripDiv.className = 'slot-strip';
+        
+        // Buat sel-sel acak di dalam strip untuk efek spin
+        for (let i = 0; i < cellCount - 1; i++) {
+          const randA = teamA[Math.floor(Math.random() * teamA.length)];
+          const randB = teamB[Math.floor(Math.random() * teamB.length)];
+          
+          const cell = document.createElement('div');
+          cell.className = 'slot-cell';
+          cell.innerHTML = `
+            <span class="name-b">${randB}</span>
+            <span class="dash">-</span>
+            <span class="name-a">${randA}</span>
+          `;
+          stripDiv.appendChild(cell);
+        }
+
+        // Sel paling akhir adalah pasangan final sesungguhnya
+        const finalCell = document.createElement('div');
+        finalCell.className = 'slot-cell';
+        finalCell.innerHTML = `
+          <span class="name-b">${pair.nameB}</span>
+          <span class="dash">-</span>
+          <span class="name-a">${pair.nameA}</span>
+        `;
+        stripDiv.appendChild(finalCell);
+        reelDiv.appendChild(stripDiv);
+        roulettePairs.appendChild(reelDiv);
+
+        // Ambil durasi acak dari array
+        const duration = durations[reelIdx];
+
+        reelsData.push({
+          strip: stripDiv,
+          duration: duration,
+          completed: false
+        });
+      });
+
+      // Jalankan animasi untuk setiap reel secara independen
+      let completedReels = 0;
+
+      reelsData.forEach((reel, idx) => {
+        animateReel(idx, reel.duration, reel.strip, cellCount, cellHeight, () => {
+          completedReels++;
+          if (completedReels === reelsData.length) {
+            // Semua reel selesai berputar
+            rouletteTitle.textContent = '✅ Selesai!';
+
+            setTimeout(() => {
+              rouletteArea.classList.remove('active');
+              showResults(finalPairs);
+
+              isAnimating = false;
+              btnShuffle.disabled = false;
+              btnReshuffle.disabled = false;
+
+              // Animasi selebrasi confetti 🎉
+              launchConfetti();
+            }, 2000);
+          }
+        });
+      });
+    }
+
+    /**
+     * Easing function dan loop requestAnimationFrame untuk efek putaran slot realistis
+     */
+    function animateReel(reelIndex, duration, stripElement, cellCount, cellHeight, onComplete) {
+      const startTime = performance.now();
+      let lastCellIndex = -1;
+
+      function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing: easeOutQuint (sangat cepat di awal, lambat di akhir)
+        const ease = 1 - Math.pow(1 - progress, 5);
+        const totalDistance = (cellCount - 1) * cellHeight;
+        const currentY = ease * totalDistance;
+        
+        stripElement.style.transform = `translateY(-${currentY}px)`;
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          onComplete();
         }
       }
-
-      // Mulai animasi
-      tick();
+      
+      requestAnimationFrame(update);
     }
 
     /**
@@ -802,7 +1075,7 @@
      * Jika tidak ada dalam preset, dipasangkan secara berurutan dengan yang tersisa.
      */
     function getPairs(teamA, teamB) {
-      const presetPairs = {
+      const canonicalPairs = {
         'tyar': 'deni', 'deni': 'tyar',
         'dzaki': 'ahunk', 'ahunk': 'dzaki',
         'fani': 'dimas', 'dimas': 'fani',
@@ -814,7 +1087,7 @@
       // Konversi tim A menjadi array objek untuk melacak status pasangan
       const poolA = teamA.map(name => ({
         original: name,
-        lower: name.toLowerCase(),
+        canonical: getCanonical(name),
         paired: false
       }));
 
@@ -823,12 +1096,12 @@
 
       // Langkah 1: Pasangkan berdasarkan nama preset
       teamB.forEach(nameB => {
-        const bLower = nameB.toLowerCase();
-        const targetALower = presetPairs[bLower];
+        const canonB = getCanonical(nameB);
+        const targetCanonA = canonicalPairs[canonB];
         
         let matched = false;
-        if (targetALower) {
-          const matchA = poolA.find(a => !a.paired && a.lower === targetALower);
+        if (targetCanonA) {
+          const matchA = poolA.find(a => !a.paired && a.canonical === targetCanonA);
           if (matchA) {
             matchA.paired = true;
             results.push({ nameB: nameB, nameA: matchA.original });
@@ -853,44 +1126,13 @@
       return results;
     }
 
-    /**
-     * Selesaikan animasi roulette, tampilkan hasil akhir.
-     */
-    function finishRoulette(teamA, teamB) {
-      // Dapatkan hasil akhir yang sesuai dengan preset pemetaan nama
-      const finalPairs = getPairs(teamA, teamB);
-
-      // Update tampilan roulette ke hasil akhir
-      const playerBElements = roulettePairs.querySelectorAll('.player-b');
-      const playerAElements = roulettePairs.querySelectorAll('.player-a');
-      
-      finalPairs.forEach((pair, idx) => {
-        if (playerBElements[idx]) playerBElements[idx].textContent = pair.nameB;
-        if (playerAElements[idx]) playerAElements[idx].textContent = pair.nameA;
-      });
-
-      rouletteTitle.textContent = '✅ Selesai!';
-
-      // Setelah jeda singkat, tampilkan kartu hasil
-      setTimeout(() => {
-        rouletteArea.classList.remove('active');
-        showResults(finalPairs);
-
-        isAnimating = false;
-        btnShuffle.disabled = false;
-        btnReshuffle.disabled = false;
-
-        // Animasi confetti 🎉
-        launchConfetti();
-      }, 600);
-    }
-
     // ============================================================
-    //  TAMPILKAN HASIL DALAM KARTU
+    //  TAMPILKAN HASIL DALAM KARTU GRUP (BERURUTAN #1 SAMPAI #6)
     // ============================================================
     function showResults(finalPairs) {
       resultsGrid.innerHTML = '';
 
+      // Tampilkan hasil secara berurutan #1 sampai dengan #6
       finalPairs.forEach((pair, idx) => {
         const card = document.createElement('div');
         card.className = 'result-card';
@@ -904,7 +1146,6 @@
         `;
         resultsGrid.appendChild(card);
 
-        // Animasi stagger: setiap kartu muncul berurutan
         setTimeout(() => {
           card.classList.add('visible');
         }, 100 + idx * 120);
