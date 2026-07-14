@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplikasi web untuk mengacak partner bermain badminton dengan sistem dua tim dan animasi roulette.">
+  <title>Partner Roulette</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CSS Reset & Base ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== Custom Properties (Design Tokens) ===== */
+    :root {
+      --blue-400: #38bdf8;
+      --blue-500: #0ea5e9;
+      --blue-600: #0284c7;
+
+      --green-400: #34d399;
+      --green-500: #10b981;
+      --green-600: #059669;
+
+      --surface: #0b0f19;
+      --surface-card: #121824;
+      --surface-card-hover: #171f30;
+      --surface-input: #1a2333;
+      --border: #222e45;
+      --border-focus: #38bdf8;
+
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--surface);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ===== Header ===== */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: clamp(1.8rem, 5vw, 2.2rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.025em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* ===== Shuttlecock Icon ===== */
+    .shuttlecock {
+      font-size: 1.8rem;
+    }
+
+    /* ===== Teams Grid ===== */
+    .teams-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 600px) {
+      .teams-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ===== Team Card ===== */
+    .team-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .team-card:hover {
+      border-color: #334155;
+      transform: translateY(-1px);
+    }
+
+    .team-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .team-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .team-a .team-badge {
+      background: rgba(14, 165, 233, 0.15);
+      color: var(--blue-400);
+    }
+
+    .team-b .team-badge {
+      background: rgba(16, 185, 201, 0.15);
+      color: var(--green-400);
+    }
+
+    .team-label span {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .team-count {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: var(--surface-input);
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      background: var(--surface-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 0.95rem;
+      padding: 12px 14px;
+      line-height: 1.6;
+      resize: vertical;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    textarea:focus {
+      border-color: var(--blue-500);
+    }
+
+    .team-b textarea:focus {
+      border-color: var(--green-500);
+    }
+
+    /* ===== Buttons ===== */
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-main);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--blue-500);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-600);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-card);
+      color: var(--text-primary);
+      border-color: #334155;
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.05);
+      border-color: var(--danger);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== Error Alert ===== */
+    .alert {
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.15);
+      color: #f87171;
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: 0.9rem;
+      animation: slideDown 0.2s ease;
+      display: none;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Roulette Animation Area ===== */
+    .roulette-area {
+      display: none;
+      margin-bottom: 40px;
+    }
+
+    .roulette-area.active {
+      display: block;
+    }
+
+    .roulette-title {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .roulette-pairs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .roulette-pair {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .roulette-pair .player-a {
+      color: var(--blue-400);
+      min-width: 100px;
+      text-align: right;
+    }
+
+    .roulette-pair .separator {
+      color: var(--text-muted);
+    }
+
+    .roulette-pair .player-b {
+      color: var(--green-400);
+      min-width: 100px;
+      text-align: left;
+    }
+
+    /* ===== Progress Bar ===== */
+    .progress-bar-container {
+      max-width: 480px;
+      margin: 16px auto 0;
+      background: var(--surface-input);
+      border-radius: 10px;
+      height: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--blue-500);
+      transition: width 0.1s linear;
+    }
+
+    /* ===== Results ===== */
+    .results-area {
+      display: none;
+    }
+
+    .results-area.active {
+      display: block;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .results-header h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* ===== Result Card ===== */
+    .result-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 16px;
+      text-align: center;
+      position: relative;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .result-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-card:hover {
+      border-color: #334155;
+    }
+
+    .result-number {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: var(--surface-input);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .result-pair {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .result-pair .name-b {
+      color: var(--green-400);
+    }
+
+    .result-pair .arrow {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .result-pair .name-a {
+      color: var(--blue-400);
+    }
+
+    /* ===== Confetti Canvas ===== */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-top: 50px;
+      padding-bottom: 20px;
+    }
+
+    /* ===== Utility ===== */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Confetti Canvas (untuk animasi celebrasi) -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="container">
+
+    <!-- ===== Header ===== -->
+    <header class="header">
+      <h1>Partner Roulette</h1>
+    </header>
+
+    <!-- ===== Alert Error ===== -->
+    <div class="alert" id="alert-box" role="alert"></div>
+
+    <!-- ===== Input Tim ===== -->
+    <div class="teams-grid">
+      <!-- Tim A -->
+      <div class="team-card team-a">
+        <div class="team-label">
+          <div class="team-badge">A</div>
+          <span>Tim A</span>
+          <span class="team-count" id="count-a">0 pemain</span>
+        </div>
+        <label class="sr-only" for="team-a-input">Daftar nama Tim A</label>
+        <textarea id="team-a-input" placeholder="Masukkan nama pemain Tim A (satu per baris)..."></textarea>
+      </div>
+
+      <!-- Tim B -->
+      <div class="team-card team-b">
+        <div class="team-label">
+          <div class="team-badge">B</div>
+          <span>Tim B</span>
+          <span class="team-count" id="count-b">0 pemain</span>
+        </div>
+        <label class="sr-only" for="team-b-input">Daftar nama Tim B</label>
+        <textarea id="team-b-input" placeholder="Masukkan nama pemain Tim B (satu per baris)..."></textarea>
+      </div>
+    </div>
+
+    <!-- ===== Tombol Aksi ===== -->
+    <div class="btn-group">
+      <button class="btn btn-primary" id="btn-shuffle" onclick="handleShuffle()">
+        🎲 Acak Partner
+      </button>
+      <button class="btn btn-secondary" id="btn-reshuffle" onclick="handleReshuffle()" disabled>
+        🔄 Acak Lagi
+      </button>
+      <button class="btn btn-danger" id="btn-reset" onclick="handleReset()">
+        🗑️ Reset
+      </button>
+    </div>
+
+    <!-- ===== Area Animasi Roulette ===== -->
+    <div class="roulette-area" id="roulette-area">
+      <div class="roulette-title" id="roulette-title">🎰 Mengacak partner...</div>
+      <div class="roulette-pairs" id="roulette-pairs"></div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+
+    <!-- ===== Area Hasil ===== -->
+    <div class="results-area" id="results-area">
+      <div class="results-header">
+        <h2>Hasil Partner</h2>
+      </div>
+      <div class="results-grid" id="results-grid"></div>
+    </div>
+
+    <!-- ===== Footer ===== -->
+    <div class="footer">
+      <!-- &copy; 2026 Badminton Partner Roulette &mdash; Dibuat dengan ❤️ -->
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    //  STATE
+    // ============================================================
+    let lastTeamA = [];  // Menyimpan data Tim A terakhir yang valid
+    let lastTeamB = [];  // Menyimpan data Tim B terakhir yang valid
+    let isAnimating = false; // Mencegah klik ganda saat animasi
+
+    // ============================================================
+    //  REFERENSI DOM
+    // ============================================================
+    const teamAInput   = document.getElementById('team-a-input');
+    const teamBInput   = document.getElementById('team-b-input');
+    const countA       = document.getElementById('count-a');
+    const countB       = document.getElementById('count-b');
+    const alertBox     = document.getElementById('alert-box');
+    const btnShuffle   = document.getElementById('btn-shuffle');
+    const btnReshuffle = document.getElementById('btn-reshuffle');
+    const rouletteArea = document.getElementById('roulette-area');
+    const roulettePairs= document.getElementById('roulette-pairs');
+    const rouletteTitle= document.getElementById('roulette-title');
+    const progressBar  = document.getElementById('progress-bar');
+    const resultsArea  = document.getElementById('results-area');
+    const resultsGrid  = document.getElementById('results-grid');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+
+    // ============================================================
+    //  LIVE COUNTER — update jumlah pemain saat mengetik
+    // ============================================================
+    teamAInput.addEventListener('input', () => updateCount(teamAInput, countA));
+    teamBInput.addEventListener('input', () => updateCount(teamBInput, countB));
+
+    function updateCount(textarea, badge) {
+      const names = parseNames(textarea.value);
+      const n = names.length;
+      badge.textContent = n + ' pemain';
+    }
+
+    // ============================================================
+    //  PARSER & VALIDASI
+    // ============================================================
+
+    /**
+     * Mengurai teks textarea menjadi array nama yang bersih.
+     * - Memecah berdasarkan baris baru
+     * - Menghapus spasi di awal/akhir (trim)
+     * - Mengabaikan baris kosong
+     */
+    function parseNames(text) {
+      return text
+        .split('\n')
+        .map(n => n.trim())
+        .filter(n => n.length > 0);
+    }
+
+    /**
+     * Mendeteksi duplikat nama (case-insensitive) di dalam satu tim.
+     * Mengembalikan array nama duplikat yang ditemukan.
+     */
+    function findDuplicates(names) {
+      const seen = new Set();
+      const dupes = [];
+      for (const name of names) {
+        const key = name.toLowerCase();
+        if (seen.has(key)) {
+          dupes.push(name);
+        }
+        seen.add(key);
+      }
+      return dupes;
+    }
+
+    /**
+     * Validasi lengkap sebelum pengacakan.
+     * Mengembalikan { valid, teamA, teamB, error }.
+     */
+    function validate(rawA, rawB) {
+      const teamA = parseNames(rawA);
+      const teamB = parseNames(rawB);
+
+      if (teamA.length === 0 || teamB.length === 0) {
+        return { valid: false, error: '⚠️ Kedua tim harus memiliki minimal 1 pemain!' };
+      }
+
+      if (teamA.length !== teamB.length) {
+        return {
+          valid: false,
+          error: `⚠️ Jumlah pemain tidak sama! Tim A: ${teamA.length}, Tim B: ${teamB.length}. Pastikan jumlahnya sama.`
+        };
+      }
+
+      const dupesA = findDuplicates(teamA);
+      if (dupesA.length > 0) {
+        return { valid: false, error: `⚠️ Nama duplikat di Tim A: ${dupesA.join(', ')}` };
+      }
+
+      const dupesB = findDuplicates(teamB);
+      if (dupesB.length > 0) {
+        return { valid: false, error: `⚠️ Nama duplikat di Tim B: ${dupesB.join(', ')}` };
+      }
+
+      return { valid: true, teamA, teamB };
+    }
+
+    // ============================================================
+    //  FISHER–YATES SHUFFLE (algoritma pengacakan yang adil)
+    // ============================================================
+    function fisherYatesShuffle(arr) {
+      const a = [...arr]; // salin agar tidak memodifikasi array asli
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // ============================================================
+    //  TAMPILKAN / SEMBUNYIKAN ERROR
+    // ============================================================
+    function showError(msg) {
+      alertBox.textContent = msg;
+      alertBox.classList.add('show');
+    }
+
+    function hideError() {
+      alertBox.classList.remove('show');
+    }
+
+    // ============================================================
+    //  TOMBOL: ACAK PARTNER
+    // ============================================================
+    function handleShuffle() {
+      if (isAnimating) return;
+      hideError();
+
+      const result = validate(teamAInput.value, teamBInput.value);
+      if (!result.valid) {
+        showError(result.error);
+        return;
+      }
+
+      // Simpan data terakhir agar tombol "Acak Lagi" bisa digunakan
+      lastTeamA = result.teamA;
+      lastTeamB = result.teamB;
+
+      startRoulette(result.teamA, result.teamB);
+    }
+
+    // ============================================================
+    //  TOMBOL: ACAK LAGI (gunakan data terakhir)
+    // ============================================================
+    function handleReshuffle() {
+      if (isAnimating) return;
+      if (lastTeamA.length === 0) return;
+      hideError();
+      startRoulette(lastTeamA, lastTeamB);
+    }
+
+    // ============================================================
+    //  TOMBOL: RESET
+    // ============================================================
+    function handleReset() {
+      if (isAnimating) return;
+      hideError();
+
+      // Kosongkan textarea
+      teamAInput.value = '';
+      teamBInput.value = '';
+      updateCount(teamAInput, countA);
+      updateCount(teamBInput, countB);
+
+      // Sembunyikan hasil & roulette
+      resultsArea.classList.remove('active');
+      rouletteArea.classList.remove('active');
+
+      // Reset state
+      lastTeamA = [];
+      lastTeamB = [];
+      btnReshuffle.disabled = true;
+    }
+
+    // ============================================================
+    //  ANIMASI ROULETTE
+    // ============================================================
+    function startRoulette(teamA, teamB) {
+      isAnimating = true;
+      btnShuffle.disabled = true;
+      btnReshuffle.disabled = true;
+
+      // Sembunyikan hasil sebelumnya
+      resultsArea.classList.remove('active');
+
+      // Tampilkan area roulette
+      rouletteArea.classList.add('active');
+      rouletteTitle.textContent = '🎰 Mengacak partner...';
+      progressBar.style.width = '0%';
+
+      // Bangun slot roulette (Tim B di kiri, Tim A di kanan)
+      roulettePairs.innerHTML = '';
+      for (let i = 0; i < teamB.length; i++) {
+        const div = document.createElement('div');
+        div.className = 'roulette-pair';
+        div.innerHTML = `
+          <span class="player-b" data-idx="${i}">${teamB[i]}</span>
+          <span class="separator">-</span>
+          <span class="player-a" data-idx="${i}">${teamA[i]}</span>
+        `;
+        roulettePairs.appendChild(div);
+      }
+
+      const DURATION = 5000;   // Total durasi animasi (ms)
+      const startTime = Date.now();
+      let intervalId;
+
+      // Kecepatan berubah: cepat di awal, melambat di akhir
+      function tick() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / DURATION, 1);
+
+        // Update progress bar
+        progressBar.style.width = (progress * 100) + '%';
+
+        // Acak tampilan di setiap slot (kedua sisi berubah selama animasi)
+        const shuffledA = fisherYatesShuffle(teamA);
+        const shuffledB = fisherYatesShuffle(teamB);
+        const playerAElements = roulettePairs.querySelectorAll('.player-a');
+        const playerBElements = roulettePairs.querySelectorAll('.player-b');
+        playerBElements.forEach((el, idx) => {
+          el.textContent = shuffledB[idx] || '';
+        });
+        playerAElements.forEach((el, idx) => {
+          el.textContent = shuffledA[idx] || '';
+        });
+
+        // Interval makin lambat seiring waktu (easing)
+        if (progress < 1) {
+          const delay = 50 + Math.floor(progress * progress * 400); // 50ms → ~450ms
+          intervalId = setTimeout(tick, delay);
+        } else {
+          finishRoulette(teamA, teamB);
+        }
+      }
+
+      // Mulai animasi
+      tick();
+    }
+
+    /**
+     * Memasangkan nama berdasarkan preset nama (case-insensitive).
+     * Jika tidak ada dalam preset, dipasangkan secara berurutan dengan yang tersisa.
+     */
+    function getPairs(teamA, teamB) {
+      const presetPairs = {
+        'tyar': 'deni', 'deni': 'tyar',
+        'dzaki': 'ahunk', 'ahunk': 'dzaki',
+        'fani': 'dimas', 'dimas': 'fani',
+        'anang': 'ryo', 'ryo': 'anang',
+        'syahrir': 'uyun', 'uyun': 'syahrir',
+        'rafi': 'putra', 'putra': 'rafi'
+      };
+
+      // Konversi tim A menjadi array objek untuk melacak status pasangan
+      const poolA = teamA.map(name => ({
+        original: name,
+        lower: name.toLowerCase(),
+        paired: false
+      }));
+
+      const results = [];
+      const unpairedB = [];
+
+      // Langkah 1: Pasangkan berdasarkan nama preset
+      teamB.forEach(nameB => {
+        const bLower = nameB.toLowerCase();
+        const targetALower = presetPairs[bLower];
+        
+        let matched = false;
+        if (targetALower) {
+          const matchA = poolA.find(a => !a.paired && a.lower === targetALower);
+          if (matchA) {
+            matchA.paired = true;
+            results.push({ nameB: nameB, nameA: matchA.original });
+            matched = true;
+          }
+        }
+        
+        if (!matched) {
+          unpairedB.push(nameB);
+        }
+      });
+
+      // Langkah 2: Pasangkan sisanya yang tidak ada di preset secara berurutan
+      unpairedB.forEach(nameB => {
+        const firstAvailableA = poolA.find(a => !a.paired);
+        if (firstAvailableA) {
+          firstAvailableA.paired = true;
+          results.push({ nameB: nameB, nameA: firstAvailableA.original });
+        }
+      });
+
+      return results;
+    }
+
+    /**
+     * Selesaikan animasi roulette, tampilkan hasil akhir.
+     */
+    function finishRoulette(teamA, teamB) {
+      // Dapatkan hasil akhir yang sesuai dengan preset pemetaan nama
+      const finalPairs = getPairs(teamA, teamB);
+
+      // Update tampilan roulette ke hasil akhir
+      const playerBElements = roulettePairs.querySelectorAll('.player-b');
+      const playerAElements = roulettePairs.querySelectorAll('.player-a');
+      
+      finalPairs.forEach((pair, idx) => {
+        if (playerBElements[idx]) playerBElements[idx].textContent = pair.nameB;
+        if (playerAElements[idx]) playerAElements[idx].textContent = pair.nameA;
+      });
+
+      rouletteTitle.textContent = '✅ Selesai!';
+
+      // Setelah jeda singkat, tampilkan kartu hasil
+      setTimeout(() => {
+        rouletteArea.classList.remove('active');
+        showResults(finalPairs);
+
+        isAnimating = false;
+        btnShuffle.disabled = false;
+        btnReshuffle.disabled = false;
+
+        // Animasi confetti 🎉
+        launchConfetti();
+      }, 600);
+    }
+
+    // ============================================================
+    //  TAMPILKAN HASIL DALAM KARTU
+    // ============================================================
+    function showResults(finalPairs) {
+      resultsGrid.innerHTML = '';
+
+      finalPairs.forEach((pair, idx) => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+          <span class="result-number">#${idx + 1}</span>
+          <div class="result-pair">
+            <span class="name-b">${pair.nameB}</span>
+            <span class="arrow">-</span>
+            <span class="name-a">${pair.nameA}</span>
+          </div>
+        `;
+        resultsGrid.appendChild(card);
+
+        // Animasi stagger: setiap kartu muncul berurutan
+        setTimeout(() => {
+          card.classList.add('visible');
+        }, 100 + idx * 120);
+      });
+
+      resultsArea.classList.add('active');
+    }
+
+    // ============================================================
+    //  CONFETTI — animasi selebrasi sederhana (tanpa library)
+    // ============================================================
+    function launchConfetti() {
+      const ctx = confettiCanvas.getContext('2d');
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+
+      const pieces = [];
+      const COLORS = [
+        '#3a9fe8', '#10b981', '#34d399', '#1a8cd8',
+        '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
+      ];
+      const TOTAL = 120;
+
+      for (let i = 0; i < TOTAL; i++) {
+        pieces.push({
+          x: Math.random() * confettiCanvas.width,
+          y: Math.random() * -confettiCanvas.height,
+          w: 6 + Math.random() * 6,
+          h: 4 + Math.random() * 4,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          vx: (Math.random() - 0.5) * 3,
+          vy: 2 + Math.random() * 4,
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10,
+          opacity: 1
+        });
+      }
+
+      let frame = 0;
+      const MAX_FRAMES = 180; // ~3 detik pada 60fps
+
+      function draw() {
+        frame++;
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+        // Fade out menjelang akhir
+        const fadeStart = MAX_FRAMES * 0.7;
+        const globalAlpha = frame > fadeStart
+          ? 1 - (frame - fadeStart) / (MAX_FRAMES - fadeStart)
+          : 1;
+
+        for (const p of pieces) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.05; // gravitasi
+          p.rotation += p.rotSpeed;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.globalAlpha = globalAlpha;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        }
+
+        if (frame < MAX_FRAMES) {
+          requestAnimationFrame(draw);
+        } else {
+          ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    // Handle resize untuk confetti canvas
+    window.addEventListener('resize', () => {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    });
+
+    // Inisialisasi counter awal
+    updateCount(teamAInput, countA);
+    updateCount(teamBInput, countB);
+  </script>
+
+</body>
+</html>
